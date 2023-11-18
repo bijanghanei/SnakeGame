@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.Random;
 
 public class GamePanel extends JPanel implements ActionListener {
@@ -11,7 +13,7 @@ public class GamePanel extends JPanel implements ActionListener {
     int applesEaten;
     int appleX;
     int appleY;
-    char direction = 'R';
+    char direction = 'U';
     boolean running = false;
     Timer timer;
     Random random;
@@ -20,7 +22,7 @@ public class GamePanel extends JPanel implements ActionListener {
         this.setPreferredSize(new Dimension(Configs.SCREEN_WIDTH, Configs.SCREEN_HEIGHT));
         this.setBackground(Color.black);
         this.setFocusable(true);
-        this.addKeyListener(new MyKeyAdapter());
+        this.addKeyListener(new MyKeyAdapter(direction));
         startGame();
     }
     public void gameOver(Graphics g){
@@ -35,7 +37,7 @@ public class GamePanel extends JPanel implements ActionListener {
         g.setFont(new Font("Arial",Font.BOLD,50));
         FontMetrics fontMetrics2 = getFontMetrics(g.getFont());
         g.drawString("GAME OVER",(Configs.SCREEN_WIDTH-fontMetrics2.stringWidth("GAME OVER")),g.getFont().getSize());
-    }
+            }
     public void checkCollision(){
 
     }
@@ -74,6 +76,5 @@ public class GamePanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
     }
-
 }
 
