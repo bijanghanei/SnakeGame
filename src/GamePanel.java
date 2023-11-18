@@ -13,7 +13,7 @@ public class GamePanel extends JPanel implements ActionListener {
     int applesEaten;
     int appleX;
     int appleY;
-    char direction = 'U';
+    char direction = 'R';
     boolean running = false;
     Timer timer;
     Random random;
@@ -22,7 +22,7 @@ public class GamePanel extends JPanel implements ActionListener {
         this.setPreferredSize(new Dimension(Configs.SCREEN_WIDTH, Configs.SCREEN_HEIGHT));
         this.setBackground(Color.black);
         this.setFocusable(true);
-        this.addKeyListener(new MyKeyAdapter(direction));
+        this.addKeyListener(new MyKeyAdapter());
         startGame();
     }
     public void gameOver(Graphics g){
@@ -45,7 +45,25 @@ public class GamePanel extends JPanel implements ActionListener {
 
     }
     public void move(){
+        switch (direction){
+            case 'L':
+                x[0] -= Configs.UNIT_SIZE;
+                break;
+            case 'U':
+                y[0] -= Configs.UNIT_SIZE;
+                break;
+            case 'R':
+                x[0] += Configs.UNIT_SIZE;
+                break;
+            case 'D':
+                y[0] += Configs.UNIT_SIZE;
+                break;
+        }
 
+        for (int i = bodyParts; i>0; i--){
+            x[i] = x[i-1];
+            y[i] = y[i-1];
+        }
     }
     public void newApple(){
         appleX = random.nextInt(Configs.SCREEN_WIDTH/Configs.UNIT_SIZE)*Configs.UNIT_SIZE;
@@ -66,6 +84,11 @@ public class GamePanel extends JPanel implements ActionListener {
 //            g.drawOval(appleX,appleY,Configs.UNIT_SIZE,Configs.UNIT_SIZE);
             g.setColor(Color.red);
             g.fillOval(appleX,appleY,Configs.UNIT_SIZE,Configs.UNIT_SIZE);
+
+            for (int i = 0; i<bodyParts; i++){
+                g.setColor(Color.green);
+                g.fillRect(x[i],y[i],Configs.UNIT_SIZE,Configs.UNIT_SIZE);
+            }
         }
     }
     public void paintComponent(Graphics g){
@@ -74,7 +97,37 @@ public class GamePanel extends JPanel implements ActionListener {
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if (running){
+            move();
+        }
+        repaint();
+    }
+    public class MyKeyAdapter extends KeyAdapter {
+        @Override
+        public void keyPressed(KeyEvent e) {
+            switch (e.getKeyCode()){
+                case KeyEvent.VK_LEFT:
+                    if (direction != 'R'){
+                        direction = 'L';
+                    }
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    if (direction != 'L'){
+                        direction = 'R';
+                    }
+                    break;
+                case KeyEvent.VK_DOWN:
+                    if (direction != 'U'){
+                        direction = 'D';
+                    }
+                    break;
+                case KeyEvent.VK_UP:
+                    if (direction != 'D'){
+                        direction = 'U';
+                    }
+                    break;
+            }
+        }
     }
 }
 
