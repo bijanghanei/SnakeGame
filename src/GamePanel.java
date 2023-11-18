@@ -39,12 +39,39 @@ public class GamePanel extends JPanel implements ActionListener {
         g.drawString("GAME OVER",(Configs.SCREEN_WIDTH-fontMetrics2.stringWidth("GAME OVER")),g.getFont().getSize());
             }
     public void checkCollision(){
-
+        for (int i = bodyParts; i>0; i--){
+            if ((x[0] == x[i]) && (y[0] == y[i])) {
+                running = false;
+                timer.stop();
+            }
+        }
+        if (x[0] > Configs.SCREEN_WIDTH){
+            x[0] = 0;
+        }
+        if (x[0] < 0){
+            x[0] = Configs.SCREEN_WIDTH;
+        }
+        if (y[0] > Configs.SCREEN_HEIGHT){
+            y[0] = 0;
+        }
+        if (y[0] < 0){
+            y[0] = Configs.SCREEN_HEIGHT;
+        }
     }
     public void checkApple(){
-
+        if (running){
+            if (appleX == x[0] && appleY == y[0]){
+                bodyParts++;
+                applesEaten++;
+                newApple();
+            }
+        }
     }
     public void move(){
+        for (int i = bodyParts; i>0; i--){
+            x[i] = x[i-1];
+            y[i] = y[i-1];
+        }
         switch (direction){
             case 'L':
                 x[0] -= Configs.UNIT_SIZE;
@@ -60,10 +87,7 @@ public class GamePanel extends JPanel implements ActionListener {
                 break;
         }
 
-        for (int i = bodyParts; i>0; i--){
-            x[i] = x[i-1];
-            y[i] = y[i-1];
-        }
+
     }
     public void newApple(){
         appleX = random.nextInt(Configs.SCREEN_WIDTH/Configs.UNIT_SIZE)*Configs.UNIT_SIZE;
@@ -99,6 +123,8 @@ public class GamePanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (running){
             move();
+            checkApple();
+            checkCollision();
         }
         repaint();
     }
